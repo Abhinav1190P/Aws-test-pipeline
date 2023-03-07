@@ -1,0 +1,18 @@
+service: my-node-server-lambda
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-south-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+      Resource:
+        - "*"
+
+functions:
+  my-function:
+    handler: index.handler
+    environment:
+      MY_VARIABLE: "my-lambda-function"
