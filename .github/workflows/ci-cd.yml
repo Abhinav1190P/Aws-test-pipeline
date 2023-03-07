@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Deploy to AWS Lambda
+      - name: Deploy to AWS Lambda 
         env:
           AWS_REGION: ap-south-1    # Update to the region where you want to deploy your Lambda function
           AWS_LAMBDA_FUNCTION_NAME: my-node-server-lambda    # Update to the name of your AWS Lambda function
