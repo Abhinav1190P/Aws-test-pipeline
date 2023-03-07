@@ -2,7 +2,7 @@ service: my-node-server-lambda
 
 provider:
   name: aws
-  runtime: '14'
+  runtime: nodejs14.x
   region: ap-south-1
   iamRoleStatements:
     - Effect: "Allow"
