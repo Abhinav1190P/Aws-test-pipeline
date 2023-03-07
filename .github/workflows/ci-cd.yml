@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Deploy to AWS Lambda
 
 on:
   push:
@@ -6,46 +6,26 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          node-version: 16.x
 
-      - name: Install dependencies
+      - name: Install Node.js
+        uses: actions/setup-node@v2.4.2
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
-
-      - name: Build package
-        run: npm run build
-
-      - name: Zip package
-        run: zip -r package.zip ./* --exclude node_modules/\* .git/\*
-
-  deploy:
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install AWS CLI
+      - name: Deploy to AWS Lambda
+        env:
+          AWS_REGION: ap-south-1    # Update to the region where you want to deploy your Lambda function
+          AWS_LAMBDA_FUNCTION_NAME: my-node-server-lambda    # Update to the name of your AWS Lambda function
+          AWS_PROFILE: my-aws-profile    # Update to the name of your AWS CLI profile
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          sudo pip3 install awscli
-
-      - name: Deploy to Lambda
-        run: |
-          aws lambda update-function-code \
-            --function-name my-lambda-function \
-            --zip-file fileb://package.zip \
-            --region ap-south-1 \
-            --profile my-aws-profile
+          npm run build    # If you need to build your Node.js server before deploying it
+          sls deploy    # Use the Serverless Framework to deploy your Node.js server to AWS Lambda
